@@ -1,0 +1,23 @@
+# Never commit real values
+*.key
+*.crt
+*.pem
+*.env
+.env
+credentials*
+secrets*
+config.json
+x-ui.db
+
+# Real client links
+links.txt
+my-links*
+*-real.txt
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/

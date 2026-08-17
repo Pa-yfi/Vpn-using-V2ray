@@ -1,0 +1,30 @@
+# Path B — VLESS + WebSocket + TLS behind Cloudflare
+# One line in practice. Broken up here with annotations.
+
+vless://UUID@cdn.example.com:8443?type=ws&security=tls&encryption=none&sni=cdn.example.com&host=cdn.example.com&path=%2FxK9pQ&fp=chrome&alpn=http%2F1.1#CF-Fallback
+
+# ---------------------------------------------------------------------------
+# @cdn.example.com   <- THE DOMAIN, never SERVER_IP.
+#                       With Address blank (correct), 3x-ui puts the raw IP in
+#                       generated links. Edit it, or set External Proxy in the
+#                       inbound so the panel generates it correctly.
+# 8443               <- one of CF's HTTPS origin ports:
+#                       443, 2053, 2083, 2087, 2096, 8443
+# type=ws
+# security=tls
+# encryption=none
+# sni=cdn.example.com    <- NOT the Reality SNI. Classic copy-paste bug.
+# host=cdn.example.com   <- must match the inbound's Stream -> Host
+# path=%2FxK9pQ          <- PERCENT-ENCODED. "/xK9pQ" breaks some clients.
+# fp=chrome
+# alpn=http%2F1.1        <- http/1.1 only. Remove h2: CF speaks HTTP/1.1
+#                           to origins for WebSocket.
+# (no flow parameter)    <- xtls-rprx-vision is incompatible with WebSocket
+# ---------------------------------------------------------------------------
+
+# Optional third profile: direct, bypassing Cloudflare.
+# Only works with a publicly trusted certificate (DNS-01 method), not with a
+# Cloudflare Origin Certificate. Useful as a fallback AND as a diagnostic:
+# if this connects but the CF one doesn't, the problem is in the CF path.
+
+vless://UUID@direct.example.com:8443?type=ws&security=tls&encryption=none&sni=direct.example.com&host=cdn.example.com&path=%2FxK9pQ&fp=chrome&alpn=http%2F1.1#Direct-WS

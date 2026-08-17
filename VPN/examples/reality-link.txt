@@ -1,0 +1,27 @@
+# Path A — VLESS + Reality (direct)
+# One line in practice. Broken up here with annotations.
+#
+# Always EXPORT from the panel. A single wrong character in pbk or sid
+# fails silently and identically to every other Reality error.
+
+vless://UUID@SERVER_IP:443?type=tcp&security=reality&encryption=none&pbk=PUBLIC_KEY&fp=chrome&sni=www.speedtest.net&sid=SHORT_ID&spx=%2F&flow=xtls-rprx-vision#Reality-Direct
+
+# ---------------------------------------------------------------------------
+# UUID          client UUID from the panel
+# SERVER_IP     raw VPS IP (Reality does not need a domain)
+# 443           inbound port
+# type=tcp      RAW transport
+# security=reality
+# encryption=none        <- must be none; clear any mlkem768x25519plus... value
+# pbk=PUBLIC_KEY         <- Reality public key, copy exactly
+# fp=chrome              <- uTLS fingerprint, must match the inbound
+# sni=www.speedtest.net  <- must match the inbound's Server Names
+# sid=SHORT_ID           <- must be one of the inbound's Short IDs
+# spx=%2F                <- SpiderX
+# flow=xtls-rprx-vision  <- required for Reality
+# ---------------------------------------------------------------------------
+#
+# Client compatibility:
+#   Xray-core clients (v2rayN, v2rayA, Streisand)  -> leave minClientVer blank
+#   sing-box clients (Hiddify, NekoBox, mihomo)    -> set minClientVer = 1.8.0
+#                                                     (weakens fingerprint)
